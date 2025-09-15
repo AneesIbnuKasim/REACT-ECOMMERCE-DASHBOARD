@@ -12,7 +12,7 @@ export default function App() {
     <>
     <ErrorBoundary>
     <Navbar/>
-    <div className="pt-16">
+    <div className="pt-16 mx-16">
     <Routes>
     <Route path="/" element={<Home/>} />
     <Route path="/products" element={<Products/>} />
