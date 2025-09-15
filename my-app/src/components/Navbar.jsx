@@ -1,6 +1,7 @@
 // src/components/Navbar.jsx
 import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,12 +23,12 @@ const Navbar = () => {
         <ul className="hidden md:flex gap-6">
           {links.map((link) => (
             <li key={link.name}>
-              <a
-                href={link.href}
+              <Link
+                to={link.href}
                 className="text-gray-700 hover:text-blue-600 transition"
               >
                 {link.name}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
