@@ -6,13 +6,10 @@ function ProductCard({product}) {
     const addToCart = ()=>{
         dispatch ({type:'ADD',payload:product}) 
     }
-    useEffect(()=>{
-        console.log('cart:',cart);
-    },[cart])
 
   return (
     <div className="card p-4 border rounded grid grid-rows-[auto_1fr]">
-  <img src={product.image} alt="product" className="w-full h-50  mb-4" />
+  <img src={product.images[0]} alt="product" className="w-full h-50  mb-4" />
   <div>
     <h2 className="font-bold text-lg mb-2">{product.title}</h2>
     <p className="text-gray-600 mb-4">{product.description.slice(0,150)}</p>

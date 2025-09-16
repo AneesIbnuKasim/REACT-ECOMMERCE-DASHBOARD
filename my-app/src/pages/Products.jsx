@@ -1,31 +1,53 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import ProductCard from '../components/ProductCard';
+import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
+import ProductCard from '../components/ProductCard'
 import useDebounce from '../hooks/useDebounce';
 
 function Products() {
     const [allProducts, setAllProducts] = useState([])
     const [products, setProducts] = useState([])
     const [searchQuery, setSearchQuery] = useState('')
+    const [page, setPage] = useState(1)
+    const [loading, setLoading] = useState(false)
     const debouncedSearch = useDebounce(searchQuery, 500)
+    const PAGE_SIZE = 20
 
     const fetchProducts = useCallback(async()=>{
-        
+        setLoading(true)
         try {
-            const res = await fetch("https://fakestoreapi.com/products")
+            const res = await fetch("https://dummyjson.com/products?limit=1000")
+            // https://fakestoreapi.com/products  https://dummyjson.com/products?limit=1000
             const data = await res.json()
-            setAllProducts(data)
-            setProducts(data)
+            setAllProducts(data.products)
+            setProducts(data.products.slice(0,PAGE_SIZE))
         } catch (error) {
             console.log(error.message);
-            
         }
-        
+        setLoading(false)
     },[])
+
+    const loadMore = ()=>{
+        const nextProducts = allProducts.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE)
+        setProducts(prev=>[...prev, ...nextProducts])
+        setPage(prev=>prev+1)
+    }
 
     const handleSearch =async(e)=>{
         setSearchQuery(e.target.value)
 
     }
+// infinite loading
+    useEffect(()=>{
+        const handleScroll = ()=>{
+            if(window.innerHeight+window.scrollY>= document.body.offsetHeight-500 &&
+                !loading && products.length < allProducts.length
+            ) { loadMore()}
+        }
+        window.addEventListener('scroll',handleScroll)
+        return ()=>{
+            window.removeEventListener('scroll',handleScroll)
+        }
+    }, [products, loading, allProducts])
+
     useEffect(()=>{
         const runSearch = ()=>{
             if(!debouncedSearch) setProducts(allProducts)
@@ -55,6 +77,10 @@ function Products() {
         )
       }
     </div>
+   {loading && ( <div> <h1>Loading...</h1>    </div>)}
+   {!loading && products.length > allProducts.length && (
+    <div><h1>No more products to load!</h1></div>
+   )}
     </>
   )
 }

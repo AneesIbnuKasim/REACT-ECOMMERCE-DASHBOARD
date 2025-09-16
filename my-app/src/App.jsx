@@ -1,11 +1,13 @@
+import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import Products from "./pages/Products";
-import ProductDetails from "./pages/ProductDetails";
-import Cart from "./pages/Cart";
-import Checkout from "./pages/Checkout";
+const Home = lazy(() => import("./pages/Home"));
+const Products = lazy(() => import("./pages/Products"));
+const ProductDetails = lazy(() => import("./pages/ProductDetails"));
+const Cart = lazy(() => import("./pages/Cart"));
+const Checkout = lazy(() => import("./pages/Checkout"));
 import ErrorBoundary from "./components/ErrorBoundary";
+
 
 export default function App() {
   return (
@@ -13,6 +15,7 @@ export default function App() {
     <ErrorBoundary>
     <Navbar/>
     <div className="pt-16 mx-16">
+    <Suspense fallback={<div>Loading page...</div>}>
     <Routes>
     <Route path="/" element={<Home/>} />
     <Route path="/products" element={<Products/>} />
@@ -20,6 +23,7 @@ export default function App() {
     <Route path="/cart" element={<Cart/>} />
     <Route path="/checkout" element={<Checkout/>} />
     </Routes>
+    </Suspense>
     </div>
     </ErrorBoundary>
     </>
